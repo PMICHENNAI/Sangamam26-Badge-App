@@ -32,7 +32,8 @@ Problems are written to an **Errors** tab.
 Saving alone does not update the live web app.
 
 Email limits: about 100 emails/day on a free Gmail account, about 1,500/day on Google Workspace.
-Each address can receive at most 5 badge emails (change `MAX_EMAILS_PER_ADDRESS`).
+The script adds its own caps (settings at the top of `Code.gs`): 60 emails a day in total, 3 per address, 1,500 sheet rows a day.
+To switch the email feature off, set `EMAIL_ENABLED = false` in `Code.gs` (redeploy) and `EMAIL_BUTTON: false` in `index.html`.
 
 ## Replacing the templates
 Keep the same file names. Higher-resolution templates (e.g. 2000 x 2000 px) give a sharper badge.
@@ -49,3 +50,11 @@ The header shows the PMI Chennai logo (`assets/pmi-chennai-logo.png`), the app o
 ("Arumugam Mariappan, VP Technology, PMI Chennai Chapter") and "Made for PMI Chennai Chapter, Sangamam26".
 Colours are CSS variables at the top of `index.html`. Default share hashtags are in `CONFIG.HASHTAGS`.
 Photo-circle positions are set per template in `CONFIG.CIRCLE` (the two templates differ slightly).
+
+## Security notes
+- The web app URL in `index.html` is visible to anyone, by design. The script therefore validates every request,
+  stores names and emails as plain text (so spreadsheet formulas cannot run), caps daily use, and never returns sheet data.
+- Keep the Google Sheet private. Delete the data after the event.
+- Protect the GitHub account with two-factor authentication and keep at least two owners.
+- If the web app URL is ever abused, deploy a new version as a New deployment and paste the new URL into `index.html`.
+- Badge emails sent through the script are also kept in the Sent folder of the Google account that owns the script.

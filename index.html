@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="base-uri 'self'; object-src 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Sangamam26 badge maker | PMI Chennai Chapter</title>
 <meta name="description" content="Create your I'm attending or I'm volunteering badge for Sangamam26.">
@@ -160,7 +162,7 @@
     <div class="actions"><button id="go" type="submit">Create my badge</button></div>
     <div class="bar" id="bar"><span></span></div>
     <div id="msg" class="msg" role="status" aria-live="polite"></div>
-    <p class="privacy">Your photo is processed on your device and is not uploaded unless you choose to email the badge to yourself. Your name and email are used to send your badge and for the chapter's event records.</p>
+    <p class="privacy"><b>Your privacy.</b> The name and email you enter are used only to understand how this app is being used for Sangamam26, and to send you your badge if you ask for it. Your photo is processed on your own device and is not stored anywhere in this app. It leaves your device only if you choose &ldquo;Email me this badge&rdquo;, and then the finished badge is sent only to your own email address.</p>
   </form>
 
   <section id="result" class="panel" aria-live="polite">
@@ -190,6 +192,7 @@
         <textarea id="caption" rows="6"></textarea>
         <div class="actions tight"><button id="copyCap" type="button" class="secondary">Copy caption</button></div>
         <div class="actions"><button id="again" type="button" class="secondary">Make another badge</button></div>
+        <p class="hint" id="emailNote">Choosing &ldquo;Email me this badge&rdquo; sends the finished badge to the email address you entered. Nothing else is shared.</p>
         <div id="msg2" class="msg" role="status"></div>
       </div>
     </div>
@@ -202,7 +205,7 @@
 /* ============ CONFIG ============ */
 const CONFIG = {
   // Paste your Google Apps Script web app URL here (see README). Leave empty to disable email and sheet logging.
-  APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbyHBnb0e1zWTJOtPvXLLEjnxRGx7fwmCDkKmqWOgoHSqXZA3-lTVSy8iD1waTwB02kRDQ/exec",
+  APPS_SCRIPT_URL: "",
 
   // Where the photo circle sits on each template, as fractions of the template width.
   // r = photo radius, ring = white disc radius (covers the template's sample picture).
@@ -220,9 +223,9 @@ const CONFIG = {
   HASHTAGS: "#Sangamam26 #pmichennai #pmicc #leadership #ai #thenewartofdelivery #humanwisdom #aipower #outcomesamplified",
   // Background removal runs in the browser. These are tried in order.
   REMOVER_URLS: [
-    "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.5.5/+esm",
-    "https://esm.sh/@imgly/background-removal@1.5.5"
+    "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.5.5/+esm"
   ],
+  EMAIL_BUTTON: true,   // set to false to hide "Email me this badge" (also switch EMAIL_ENABLED off in the script)
   OUTPUT_MIN: 1080,
   PHOTO_MAX_SIDE: 1024
 };
@@ -351,7 +354,7 @@ form.addEventListener("submit", async (e) => {
   const file = $("photo").files[0];
 
   if (!type) return say(msg, "Please choose a badge type.", "err");
-  if (name.length < 2) return say(msg, "Please enter your full name.", "err");
+  if (!/^[\p{L}\p{M} .'\u2019-]{2,80}$/u.test(name)) return say(msg, "Please enter your full name using letters only (spaces, dots, apostrophes and hyphens are fine).", "err");
   if (!validEmail(email)) return say(msg, "Please enter a valid email ID.", "err");
   if (!file) return say(msg, "Please choose your photo.", "err");
   if (!templates[type]) return say(msg, "The badge template is still loading. Please try again in a moment.", "err");
@@ -390,7 +393,8 @@ form.addEventListener("submit", async (e) => {
       : "Done.", state.usedFallback ? "err" : "ok");
 
     $("caption").value = defaultCaption();
-    $("emailBtn").hidden = !CONFIG.APPS_SCRIPT_URL;
+    $("emailBtn").hidden = !(CONFIG.APPS_SCRIPT_URL && CONFIG.EMAIL_BUTTON);
+    $("emailNote").hidden = $("emailBtn").hidden;
     send("log").then((r) => {                          // record name, email and badge type
       if (!r.ok && r.reason !== "not-configured") say(msg2, "Your badge is ready, but we could not record your details. Please tell the organisers.", "err");
     });
