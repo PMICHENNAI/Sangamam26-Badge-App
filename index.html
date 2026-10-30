@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sangamam26 badge maker | PMI Chennai Chapter</title>
+<meta name="description" content="Create your I'm attending or I'm volunteering badge for Sangamam26.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --violet-600: #4B1944;
+    --violet-100: #F1E8F0;
+    --violet-50: #F9F5F9;
+    --aqua-200: #A4E0E0;
+    --aqua-700: #0F6E73;
+    --tangerine-300: #FF6210;
+    --ink: #1D0B1B;
+    --muted: #6A5668;
+    --line: #E3D5E1;
+    --bg: #FFFFFF;
+    --err: #B3261E;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    border-top: 6px solid; border-image: linear-gradient(90deg,#4B1944,#FF6210,#A4E0E0) 1;
+    font-family: "Aeonik", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--ink);
+    background: var(--violet-50);
+    line-height: 1.5;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 28px 18px 56px; }
+  header { margin-bottom: 22px; }
+  .brand-unused { display: flex; align-items: center; gap: 10px; color: var(--violet-600); font-weight: 600; font-size: 15px; }
+  .brand i { width: 14px; height: 14px; background: var(--tangerine-300); border-radius: 50%; display: inline-block; }
+  .brandhead { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 16px 22px; display: flex; align-items: center; gap: 22px; flex-wrap: wrap; margin-bottom: 20px; }
+  .brandlogo { height: 76px; width: auto; display: block; }
+  .owner { font-size: 14px; color: var(--muted); line-height: 1.45; }
+  .owner .lbl { text-transform: none; font-size: 13px; }
+  .owner b { color: var(--violet-600); display: block; font-size: 15px; font-weight: 600; }
+  .owner .made { margin-top: 6px; color: var(--violet-600); font-weight: 500; }
+  h1 { font-size: clamp(28px, 5vw, 40px); line-height: 1.1; margin: 14px 0 8px; color: var(--violet-600); letter-spacing: -0.02em; }
+  header p { margin: 0; color: var(--muted); max-width: 52ch; }
+
+  .panel { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: 22px; margin-bottom: 18px; }
+  h2 { font-size: 18px; margin: 0 0 14px; color: var(--violet-600); }
+
+  .types { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; border: 0; padding: 0; margin: 0; }
+  .types legend { position: absolute; left: -9999px; }
+  .type { position: relative; cursor: pointer; }
+  .type input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+  .type .card { display: block; border: 2px solid var(--line); border-radius: 18px; padding: 12px; text-align: center; background: #fff; transition: border-color .15s, box-shadow .15s; }
+  .type img { width: 100%; max-width: 190px; aspect-ratio: 1; border-radius: 50%; display: block; margin: 0 auto 8px; }
+  .type b { display: block; color: var(--violet-600); font-size: 16px; }
+  .type input:checked + .card { border-color: var(--violet-600); box-shadow: 0 0 0 4px var(--violet-100); }
+  .type input:focus-visible + .card { outline: 3px solid var(--tangerine-300); outline-offset: 2px; }
+
+  label { display: block; font-weight: 600; font-size: 14px; margin: 16px 0 6px; }
+  input[type=text], input[type=email] {
+    width: 100%; font: inherit; padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 12px; background: #fff; color: var(--ink);
+  }
+  input[type=text]:focus, input[type=email]:focus { outline: 3px solid var(--aqua-200); border-color: var(--violet-600); }
+
+  .photo-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .thumb { width: 64px; height: 64px; border-radius: 50%; background: var(--violet-100); object-fit: cover; border: 1.5px solid var(--line); }
+  .file-btn { position: relative; overflow: hidden; }
+  .file-btn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .hint { font-size: 13px; color: var(--muted); margin: 6px 0 0; }
+  .hp { position: absolute; left: -9999px; height: 0; overflow: hidden; }
+
+  button, .btn {
+    font: inherit; font-weight: 600; border: 0; border-radius: 999px; padding: 12px 22px; cursor: pointer;
+    background: var(--violet-600); color: #fff; display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+  }
+  button:hover { filter: none; background: #3a1234; }
+  button:focus-visible, .btn:focus-visible { outline: 3px solid var(--tangerine-300); outline-offset: 2px; }
+  button.secondary, .btn.secondary { background: var(--violet-100) !important; color: var(--violet-600); }
+  button.secondary:hover { background: #e6d6e4; filter: none; }
+  button:disabled { opacity: .5; cursor: not-allowed; }
+  .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+
+  .msg { min-height: 22px; margin-top: 14px; font-size: 14px; color: var(--muted); }
+  .msg.err { color: var(--err); font-weight: 600; }
+  .msg.ok { color: var(--aqua-700); font-weight: 600; }
+  .bar { height: 6px; background: var(--violet-100); border-radius: 99px; overflow: hidden; margin-top: 10px; display: none; }
+  .bar span { display: block; height: 100%; width: 0; background: var(--tangerine-300); transition: width .2s; }
+
+  #result { display: none; }
+  .result-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+  canvas { width: 100%; height: auto; border-radius: 50%; display: block; background: #fff; box-shadow: 0 6px 24px rgba(75,25,68,.18); }
+  .sliders label { margin-top: 12px; display: flex; justify-content: space-between; }
+  input[type=range] { width: 100%; accent-color: var(--violet-600); }
+
+  h3.sub { font-size: 15px; margin: 22px 0 0; color: var(--violet-600); }
+  .actions.tight { margin-top: 10px; }
+  textarea { width: 100%; font: inherit; font-size: 14px; padding: 10px 12px; border: 1.5px solid var(--line); border-radius: 12px; resize: vertical; color: var(--ink); }
+  textarea:focus { outline: 3px solid var(--aqua-200); border-color: var(--violet-600); }
+  button.li { background: #0A66C2; } 
+  button.wa { background: #128C7E; }
+  button.ig { background: #C13584; }
+  .privacy { font-size: 13px; color: var(--muted); margin-top: 16px; }
+  footer { font-size: 13px; color: var(--muted); text-align: center; margin-top: 8px; }
+
+  @media (max-width: 640px) {
+    .result-grid { grid-template-columns: 1fr; }
+    .panel { padding: 18px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brandhead">
+      <img id="brandLogo" class="brandlogo" src="assets/pmi-chennai-logo.png" alt="Project Management Institute Chennai, Chapter of the Year 2025 winner">
+      <div class="owner">
+        <span class="lbl">App owner</span>
+        <b>Arumugam Mariappan, VP Technology, PMI Chennai Chapter</b>
+        <div class="made">Made for PMI Chennai Chapter, Sangamam26</div>
+      </div>
+    </div>
+    <h1>Make your Sangamam26 badge</h1>
+    <p>Pick a badge, add your photo and share it. We remove the photo background for you. 14 November 2026, Hilton Chennai.</p>
+  </header>
+
+  <form id="form" class="panel" novalidate autocomplete="on">
+    <h2>1. Choose your badge</h2>
+    <fieldset class="types">
+      <legend>Badge type</legend>
+      <label class="type">
+        <input type="radio" name="type" value="attending">
+        <span class="card"><img src="templates/attending.png" alt=""><b>I'm attending</b></span>
+      </label>
+      <label class="type">
+        <input type="radio" name="type" value="volunteering">
+        <span class="card"><img src="templates/volunteering.png" alt=""><b>I'm volunteering</b></span>
+      </label>
+    </fieldset>
+
+    <h2 style="margin-top:26px">2. Your details</h2>
+    <label for="name" style="margin-top:0">Full name</label>
+    <input id="name" name="name" type="text" autocomplete="name" maxlength="80" required>
+
+    <label for="email">Email ID</label>
+    <input id="email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="120" required>
+
+    <label for="photo">Your photo</label>
+    <div class="photo-row">
+      <img id="thumb" class="thumb" alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='64' height='64' fill='%23F1E8F0'/%3E%3C/svg%3E">
+      <span class="btn secondary file-btn">Choose photo<input id="photo" name="photo" type="file" accept="image/*"></span>
+      <span id="fileName" class="hint" style="margin:0"></span>
+    </div>
+    <p class="hint">Use a clear photo of your face and shoulders. A plain background works best, but any photo is fine.</p>
+
+    <div class="hp" aria-hidden="true"><label>Website<input id="website" type="text" tabindex="-1" autocomplete="off"></label></div>
+
+    <div class="actions"><button id="go" type="submit">Create my badge</button></div>
+    <div class="bar" id="bar"><span></span></div>
+    <div id="msg" class="msg" role="status" aria-live="polite"></div>
+    <p class="privacy">Your photo is processed on your device and is not uploaded unless you choose to email the badge to yourself. Your name and email are used to send your badge and for the chapter's event records.</p>
+  </form>
+
+  <section id="result" class="panel" aria-live="polite">
+    <h2>Your badge is ready</h2>
+    <div class="result-grid">
+      <canvas id="canvas" width="1080" height="1080" aria-label="Your badge preview"></canvas>
+      <div>
+        <div class="sliders">
+          <label for="zoom">Zoom <span id="zoomV"></span></label>
+          <input id="zoom" type="range" min="0.7" max="1.6" step="0.01" value="1">
+          <label for="offX">Move left or right</label>
+          <input id="offX" type="range" min="-0.6" max="0.6" step="0.01" value="0">
+          <label for="offY">Move up or down</label>
+          <input id="offY" type="range" min="-0.6" max="0.6" step="0.01" value="0">
+        </div>
+        <div class="actions">
+          <button id="download" type="button">Download PNG</button>
+          <button id="emailBtn" type="button" class="secondary" hidden>Email me this badge</button>
+        </div>
+        <h3 class="sub">Post it</h3>
+        <div class="actions tight">
+          <button id="shLinkedin" type="button" class="li">LinkedIn</button>
+          <button id="shWhatsapp" type="button" class="wa">WhatsApp</button>
+          <button id="shInstagram" type="button" class="ig">Instagram</button>
+        </div>
+        <label for="caption" style="margin-top:14px">Caption (edit if you like)</label>
+        <textarea id="caption" rows="6"></textarea>
+        <div class="actions tight"><button id="copyCap" type="button" class="secondary">Copy caption</button></div>
+        <div class="actions"><button id="again" type="button" class="secondary">Make another badge</button></div>
+        <div id="msg2" class="msg" role="status"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>Made for PMI Chennai Chapter, Sangamam26</footer>
+</div>
+
+<script type="module">
+/* ============ CONFIG ============ */
+const CONFIG = {
+  // Paste your Google Apps Script web app URL here (see README). Leave empty to disable email and sheet logging.
+  APPS_SCRIPT_URL: "",
+
+  // Where the photo circle sits on each template, as fractions of the template width.
+  // r = photo radius, ring = white disc radius (covers the template's sample picture).
+  // The two templates differ slightly, so each has its own values.
+  CIRCLE: {
+    attending:    { cx: 0.492, cy: 0.217, r: 0.1245, ring: 0.131 },
+    volunteering: { cx: 0.508, cy: 0.227, r: 0.1245, ring: 0.131 }
+  },
+
+  TEMPLATES: { attending: "templates/attending.png", volunteering: "templates/volunteering.png" },
+  SHARE_TEXT: {
+    attending: "I'm attending Sangamam26, Tamil Nadu's largest project management conference. 14 November 2026, Hilton Chennai.",
+    volunteering: "I'm volunteering at Sangamam26, Tamil Nadu's largest project management conference. 14 November 2026, Hilton Chennai."
+  },
+  HASHTAGS: "#Sangamam26 #pmichennai #pmicc #leadership #ai #thenewartofdelivery #humanwisdom #aipower #outcomesamplified",
+  // Background removal runs in the browser. These are tried in order.
+  REMOVER_URLS: [
+    "https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.5.5/+esm",
+    "https://esm.sh/@imgly/background-removal@1.5.5"
+  ],
+  OUTPUT_MIN: 1080,
+  PHOTO_MAX_SIDE: 1024
+};
+
+/* ============ helpers ============ */
+const $ = (id) => document.getElementById(id);
+const form = $("form"), msg = $("msg"), msg2 = $("msg2"), bar = $("bar"), canvas = $("canvas");
+const ctx = canvas.getContext("2d");
+const templates = {};
+let state = { type: null, name: "", email: "", subject: null, usedFallback: false };
+
+function say(el, text, kind = "") { el.textContent = text; el.className = "msg " + kind; }
+function progress(p) { bar.style.display = p == null ? "none" : "block"; if (p != null) bar.firstElementChild.style.width = Math.round(p * 100) + "%"; }
+function slug(s) { return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) || "member"; }
+const validEmail = (s) => /^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(s);
+
+function loadImage(src) {
+  return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; });
+}
+for (const [k, src] of Object.entries(CONFIG.TEMPLATES)) loadImage(src).then((i) => (templates[k] = i));
+
+async function decodeFile(file) {
+  try { return await createImageBitmap(file, { imageOrientation: "from-image" }); }
+  catch (_) {
+    const url = URL.createObjectURL(file);
+    try { return await loadImage(url); } finally { URL.revokeObjectURL(url); }
+  }
+}
+function downscaleToBlob(src, maxSide) {
+  const w = src.width || src.naturalWidth, h = src.height || src.naturalHeight;
+  const k = Math.min(1, maxSide / Math.max(w, h));
+  const c = document.createElement("canvas");
+  c.width = Math.round(w * k); c.height = Math.round(h * k);
+  c.getContext("2d").drawImage(src, 0, 0, c.width, c.height);
+  return new Promise((res) => c.toBlob(res, "image/jpeg", 0.92));
+}
+
+let removerPromise = null;
+function getRemover() {
+  if (!removerPromise) {
+    removerPromise = (async () => {
+      let lastErr;
+      for (const url of CONFIG.REMOVER_URLS) {
+        try { const m = await import(url); return m.removeBackground || m.default; }
+        catch (e) { lastErr = e; }
+      }
+      throw lastErr || new Error("Could not load background remover");
+    })();
+    removerPromise.catch(() => (removerPromise = null));
+  }
+  return removerPromise;
+}
+
+function subjectFromBitmap(bmp) {
+  const w = bmp.width, h = bmp.height;
+  const c = document.createElement("canvas"); c.width = w; c.height = h;
+  c.getContext("2d").drawImage(bmp, 0, 0);
+  // find the bounding box of visible pixels on a small copy
+  const k = Math.min(1, 256 / Math.max(w, h));
+  const s = document.createElement("canvas"); s.width = Math.max(1, Math.round(w * k)); s.height = Math.max(1, Math.round(h * k));
+  const sc = s.getContext("2d", { willReadFrequently: true });
+  sc.drawImage(c, 0, 0, s.width, s.height);
+  const d = sc.getImageData(0, 0, s.width, s.height).data;
+  let x0 = s.width, y0 = s.height, x1 = -1, y1 = -1;
+  for (let y = 0; y < s.height; y++) for (let x = 0; x < s.width; x++) {
+    if (d[(y * s.width + x) * 4 + 3] > 40) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+  }
+  if (x1 < 0) return { canvas: c, bbox: { x: 0, y: 0, w, h } };
+  return { canvas: c, bbox: { x: x0 / k, y: y0 / k, w: (x1 - x0 + 1) / k, h: (y1 - y0 + 1) / k } };
+}
+
+/* ============ render ============ */
+function render() {
+  const tpl = templates[state.type];
+  if (!tpl) return;
+  const S = Math.max(tpl.naturalWidth, CONFIG.OUTPUT_MIN);
+  canvas.width = canvas.height = S;
+  ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(tpl, 0, 0, S, S);
+
+  const { cx: fx, cy: fy, r: fr, ring } = CONFIG.CIRCLE[state.type];
+  const cx = fx * S, cy = fy * S, r = fr * S;
+
+  // white ring + white disc cover the template's sample picture
+  ctx.fillStyle = "#fff";
+  ctx.beginPath(); ctx.arc(cx, cy, ring * S, 0, Math.PI * 2); ctx.fill();
+
+  ctx.save();
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.clip();
+  ctx.fillStyle = "#fff"; ctx.fillRect(cx - r, cy - r, 2 * r, 2 * r);
+
+  if (state.subject) {
+    const { canvas: img, bbox } = state.subject;
+    const zoom = parseFloat($("zoom").value), ox = parseFloat($("offX").value), oy = parseFloat($("offY").value);
+    const D = 2 * r;
+    const base = Math.max(D / bbox.w, (0.92 * D) / bbox.h);
+    const sc = base * zoom;
+    const dx = cx - (bbox.x + bbox.w / 2) * sc + ox * r;
+    const dy = cy - r + 0.06 * D - bbox.y * sc + oy * r;
+    ctx.drawImage(img, dx, dy, img.width * sc, img.height * sc);
+  }
+  ctx.restore();
+  $("zoomV").textContent = Math.round(parseFloat($("zoom").value) * 100) + "%";
+  state.blob = null;
+  clearTimeout(renderTimer);
+  renderTimer = setTimeout(async () => { state.blob = await toBlob(); }, 150);
+}
+let renderTimer;
+["zoom", "offX", "offY"].forEach((id) => $(id).addEventListener("input", render));
+
+const toBlob = () => new Promise((res) => canvas.toBlob(res, "image/png"));
+
+/* ============ form flow ============ */
+$("photo").addEventListener("change", (e) => {
+  const f = e.target.files[0];
+  $("fileName").textContent = f ? f.name : "";
+  if (f) { const u = URL.createObjectURL(f); $("thumb").src = u; }
+});
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if ($("website").value) return; // honeypot
+  const type = form.elements.type.value;
+  const name = $("name").value.trim().replace(/\s+/g, " ");
+  const email = $("email").value.trim();
+  const file = $("photo").files[0];
+
+  if (!type) return say(msg, "Please choose a badge type.", "err");
+  if (name.length < 2) return say(msg, "Please enter your full name.", "err");
+  if (!validEmail(email)) return say(msg, "Please enter a valid email ID.", "err");
+  if (!file) return say(msg, "Please choose your photo.", "err");
+  if (!templates[type]) return say(msg, "The badge template is still loading. Please try again in a moment.", "err");
+
+  $("go").disabled = true;
+  Object.assign(state, { type, name, email, usedFallback: false });
+  try {
+    say(msg, "Reading your photo…"); progress(0.05);
+    const bmp = await decodeFile(file);
+    const blob = await downscaleToBlob(bmp, CONFIG.PHOTO_MAX_SIDE);
+
+    let cutBitmap;
+    try {
+      say(msg, "Loading the background remover. The first time can take a minute on a slow connection…");
+      const remove = await getRemover();
+      say(msg, "Removing the background…");
+      const out = await remove(blob, {
+        output: { format: "image/png" },
+        progress: (key, cur, total) => { if (total) progress(0.1 + 0.85 * (cur / total)); }
+      });
+      cutBitmap = await createImageBitmap(out);
+    } catch (err) {
+      console.warn("Background removal failed", err);
+      state.usedFallback = true;
+      cutBitmap = await createImageBitmap(blob);
+    }
+
+    state.subject = subjectFromBitmap(cutBitmap);
+    $("zoom").value = 1; $("offX").value = 0; $("offY").value = 0;
+    render();
+    $("result").style.display = "block";
+    $("result").scrollIntoView({ behavior: "smooth", block: "start" });
+    progress(null);
+    say(msg, state.usedFallback
+      ? "We could not remove the background automatically, so your original photo is shown. Try a photo with a plainer background, or check your connection and try again."
+      : "Done.", state.usedFallback ? "err" : "ok");
+
+    $("caption").value = defaultCaption();
+    $("emailBtn").hidden = !CONFIG.APPS_SCRIPT_URL;
+    send("log").then((r) => {                          // record name, email and badge type
+      if (!r.ok && r.reason !== "not-configured") say(msg2, "Your badge is ready, but we could not record your details. Please tell the organisers.", "err");
+    });
+  } catch (err) {
+    console.error(err);
+    progress(null);
+    say(msg, "We could not read that photo. Please try a JPG or PNG image.", "err");
+  } finally {
+    $("go").disabled = false;
+  }
+});
+
+/* ============ actions ============ */
+$("download").addEventListener("click", async () => {
+  const blob = await toBlob();
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `Sangamam26-${state.type}-${slug(state.name)}.png`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  say(msg2, "Downloaded. Add it to your LinkedIn, WhatsApp or Instagram post.", "ok");
+});
+
+const canShareFiles = !!(navigator.canShare && navigator.canShare({ files: [new File([""], "x.png", { type: "image/png" })] }));
+const defaultCaption = () => CONFIG.SHARE_TEXT[state.type] + "\n\n" + CONFIG.HASHTAGS;
+const caption = () => $("caption").value.trim() || defaultCaption();
+const fileName = () => `Sangamam26-${state.type}-${slug(state.name)}.png`;
+
+function saveBlob(blob) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = fileName();
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+
+// Phones: open the native share sheet with the image attached (LinkedIn, WhatsApp, Instagram all appear there).
+async function nativeShare(app) {
+  const blob = state.blob || (await toBlob());
+  const file = new File([blob], fileName(), { type: "image/png" });
+  try {
+    await navigator.share({ files: [file], text: caption(), title: "Sangamam26" });
+    say(msg2, "", "");
+  } catch (err) {
+    if (err.name !== "AbortError") say(msg2, "Sharing did not open. Please use Download, then post the image in " + app + ".", "err");
+  }
+}
+
+// Computers: copy the image to the clipboard, save a copy, and open the app's post box.
+function desktopShare(url, app, tip) {
+  const pending = state.blob ? Promise.resolve(state.blob) : toBlob();
+  let copied = false;
+  try {
+    navigator.clipboard.write([new ClipboardItem({ "image/png": pending })]);
+    copied = true;
+  } catch (_) {}
+  if (url) window.open(url, "_blank", "noopener");
+  pending.then(saveBlob);
+  say(msg2, (copied ? "Badge copied and a PNG saved. " : "Badge saved as a PNG. ") + tip, "ok");
+}
+
+$("shLinkedin").addEventListener("click", () => {
+  if (canShareFiles) return nativeShare("LinkedIn");
+  navigator.clipboard && navigator.clipboard.writeText(caption()).catch(() => {});
+  desktopShare("https://www.linkedin.com/feed/?shareActive=true&text=" + encodeURIComponent(caption()),
+    "LinkedIn", "In the LinkedIn post box that opened, press Ctrl+V (Cmd+V on Mac) to paste the badge, or use the photo icon to attach the saved file.");
+});
+$("shWhatsapp").addEventListener("click", () => {
+  if (canShareFiles) return nativeShare("WhatsApp");
+  desktopShare("https://wa.me/?text=" + encodeURIComponent(caption()),
+    "WhatsApp", "Pick a chat in WhatsApp, then paste the badge (Ctrl+V or Cmd+V) or attach the saved file.");
+});
+$("shInstagram").addEventListener("click", () => {
+  if (canShareFiles) return nativeShare("Instagram");
+  desktopShare(null, "Instagram",
+    "Instagram cannot post from a computer browser. Send the saved file to your phone, then post it from the Instagram app. Use Copy caption for the text.");
+});
+$("copyCap").addEventListener("click", async () => {
+  try { await navigator.clipboard.writeText(caption()); say(msg2, "Caption copied.", "ok"); }
+  catch (_) { $("caption").select(); say(msg2, "Select the caption text and copy it.", "err"); }
+});
+
+$("emailBtn").addEventListener("click", async () => {
+  $("emailBtn").disabled = true;
+  say(msg2, "Sending…");
+  const r = await send("email");
+  const ok = r.ok && r.emailed !== false;
+  say(msg2, ok ? "Sent. Please check your inbox, and your spam folder if it does not show up." : "We could not send the email. Please use Download instead.", ok ? "ok" : "err");
+  $("emailBtn").disabled = false;
+});
+
+$("again").addEventListener("click", () => location.reload());
+
+async function send(action) {
+  const url = CONFIG.APPS_SCRIPT_URL;
+  if (!url) return { ok: false, reason: "not-configured" };
+  if (!/\/exec(\?|$)/.test(url)) console.warn("APPS_SCRIPT_URL should end with /exec");
+  if (!state.rid) state.rid = (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random());
+  const payload = { action, rid: state.rid + ":" + action, type: state.type, name: state.name, email: state.email, website: $("website").value };
+  if (action === "email") payload.image = canvas.toDataURL("image/png").split(",")[1];
+  const opts = { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload), redirect: "follow" };
+  try {
+    const res = await fetch(url, opts);               // normal request: we can read the answer
+    const j = await res.json();
+    if (!j.ok) console.warn("Badge log refused the request:", j);
+    return { ok: !!j.ok, emailed: j.emailed, reason: j.error };
+  } catch (err) {
+    try {                                              // fallback: send blind (the server ignores a repeat of the same request id)
+      await fetch(url, { ...opts, mode: "no-cors" });
+      return { ok: true, unconfirmed: true };
+    } catch (_) { return { ok: false, reason: "network" }; }
+  }
+}
+</script>
+</body>
+</html>
